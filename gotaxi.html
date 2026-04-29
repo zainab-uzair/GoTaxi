@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GOtaxi | Kahan jana hai?</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-tint": "#296a46",
+        "inverse-surface": "#2e3130",
+        "tertiary-container": "#004c39",
+        "error-container": "#ffdad6",
+        "surface-dim": "#d8dad9",
+        "surface-bright": "#f8faf8",
+        "primary-container": "#004d2c",
+        "on-secondary-fixed": "#171d16",
+        "inverse-primary": "#92d5a9",
+        "secondary-container": "#dee5d8",
+        "on-tertiary": "#ffffff",
+        "on-error-container": "#93000a",
+        "surface-container": "#eceeec",
+        "tertiary-fixed-dim": "#73d9b5",
+        "on-surface-variant": "#404942",
+        "outline-variant": "#bfc9bf",
+        "secondary-fixed-dim": "#c1c9bd",
+        "on-surface": "#191c1b",
+        "surface-container-high": "#e6e9e7",
+        "surface-container-highest": "#e1e3e1",
+        "tertiary-fixed": "#8ff6d0",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#7bbd93",
+        "surface-variant": "#e1e3e1",
+        "primary-fixed": "#aef2c4",
+        "on-secondary-container": "#5f665d",
+        "surface": "#f8faf8",
+        "on-primary-fixed": "#002110",
+        "on-secondary": "#ffffff",
+        "on-tertiary-container": "#5ac19e",
+        "error": "#ba1a1a",
+        "on-tertiary-fixed-variant": "#00513d",
+        "background": "#f8faf8",
+        "secondary": "#596057",
+        "primary": "#00341c",
+        "surface-container-lowest": "#ffffff",
+        "outline": "#707971",
+        "on-secondary-fixed-variant": "#424940",
+        "surface-container-low": "#f2f4f2",
+        "secondary-fixed": "#dee5d8",
+        "on-error": "#ffffff",
+        "on-background": "#191c1b",
+        "tertiary": "#003325",
+        "primary-fixed-dim": "#92d5a9",
+        "on-tertiary-fixed": "#002117",
+        "on-primary-fixed-variant": "#085230",
+        "inverse-on-surface": "#eff1ef"
+      },
+      borderRadius: {
+        DEFAULT: "0.125rem",
+        lg: "0.25rem",
+        xl: "0.5rem",
+        "2xl": "0.75rem",
+        "3xl": "1rem",
+        full: "0.75rem"
+      },
+      fontFamily: {
+        headline: ["Manrope", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+        label: ["Inter", "sans-serif"]
+      }
+    }
+  }
+};
+</script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background-color: #f8faf8; color: #191c1b; }
+  h1,h2,h3,h4,h5,h6,.font-headline { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; font-size:24px; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr; -webkit-font-smoothing:antialiased; }
+  .fill-icon { font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .glass-panel { background-color:rgba(255,255,255,0.7); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); }
+  .ambient-shadow { box-shadow:0 12px 40px rgba(0,77,44,0.06); }
+  .ghost-border { outline:1px solid rgba(191,201,191,0.15); }
+  .btn-gradient { background:linear-gradient(135deg,#00341c 0%,#004d2c 100%); }
+
+  /* Screen system */
+  .screen { display:none; }
+  .screen.active { display:flex; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .screen.active { animation:fadeSlide 0.2s ease; }
+
+  /* Toast */
+  #toast { position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#191c1b;color:#fff;padding:10px 20px;border-radius:0.75rem;font-size:0.8rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;font-family:'Inter',sans-serif; }
+  #toast.show { opacity:1; }
+
+  /* Nav active state */
+  .nav-item.active { background:rgba(174,242,196,0.5); color:#002110; border-radius:1rem; }
+  .nav-item.active .material-symbols-outlined { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+
+  /* Side nav active */
+  .side-item.active { background:#eceeec; color:#00341c; }
+
+  /* Star rating */
+  .star-btn { color:#bfc9bf; transition:color 0.15s; cursor:pointer; }
+  .star-btn.lit,.star-btn:hover,.star-btn:hover ~ .star-btn { color:#00341c; }
+  .stars-row { display:flex; flex-direction:row-reverse; justify-content:center; gap:4px; }
+  .stars-row .star-btn:hover,.stars-row .star-btn:hover ~ .star-btn { color:#00341c; }
+
+  /* Chip active */
+  .chip.active { background:#004d2c; color:#7bbd93; border-color:#004d2c; }
+
+  /* Tip btn active */
+  .tip-btn.active { background:#00341c; color:#ffffff; }
+
+  /* Scrollbar hide */
+  .no-scroll::-webkit-scrollbar{display:none} .no-scroll{-ms-overflow-style:none;scrollbar-width:none}
+
+  /* Mobile safe area support */
+  @supports(padding-bottom: env(safe-area-inset-bottom)) {
+    .mobile-nav { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+  }
+
+  /* Prevent text overflow on mobile */
+  @media(max-width:767px) {
+    .truncate-mobile { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
+    /* Book panel shows as bottom sheet */
+    #screen-book { position:relative; }
+    /* Driver request cards - stack action on mobile */
+    .driver-req-actions { flex-direction:column; gap:8px; }
+    /* Reduce fare input on mobile */
+    #fareInput { font-size:2rem !important; }
+  }
+
+  /* Ride type btn */
+  .rtype.active { background:#dee5d8; color:#00341c; outline:1px solid #bfc9bf; }
+
+  /* Layout shells */
+  .app-shell { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .main-with-sidenav { display:flex; flex:1; overflow:hidden; }
+  .side-nav { width:256px; flex-shrink:0; display:flex; flex-direction:column; background:#f2f4f2; height:100vh; padding:2rem 1.5rem; position:fixed; top:0; left:0; z-index:40; }
+  .content-area { flex:1; overflow-y:auto; margin-left:0; }
+  @media(min-width:768px) { .content-area { margin-left:256px; } .md-sidenav-show { display:flex !important; } .mobile-only { display:none !important; } }
+  @media(max-width:767px) { .side-nav { display:none; } .desktop-only { display:none !important; } }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     SHARED SIDE NAV (Desktop)
+══════════════════════════════════════════════ -->
+<nav class="side-nav md-sidenav-show" style="display:none;" id="sideNav">
+  <div class="mb-10">
+    <h1 class="text-xl font-black text-primary font-headline tracking-tighter">GOtaxi</h1>
+    <p class="text-sm text-on-surface-variant mt-1">Premium Mobility</p>
+  </div>
+  <ul class="flex flex-col gap-2 flex-grow">
+    <li><button onclick="navigate('home')" class="side-item w-full flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container rounded-lg font-headline font-semibold text-base transition-all" id="side-home"><span class="material-symbols-outlined">home</span>Home</button></li>
+    <li><button onclick="navigate('book')" class="side-item w-full flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container rounded-lg font-headline font-semibold text-base transition-all" id="side-book"><span class="material-symbols-outlined">directions_car</span>Ride</button></li>
+    <li><button onclick="navigate('track')" class="side-item w-full flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container rounded-lg font-headline font-semibold text-base transition-all" id="side-track"><span class="material-symbols-outlined">map</span>Track</button></li>
+    <li><button onclick="navigate('profile')" class="side-item w-full flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container rounded-lg font-headline font-semibold text-base transition-all" id="side-profile"><span class="material-symbols-outlined">person</span>Profile</button></li>
+    <li><button onclick="navigate('driver')" class="side-item w-full flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container rounded-lg font-headline font-semibold text-base transition-all" id="side-driver"><span class="material-symbols-outlined">dashboard</span>Driver</button></li>
+  </ul>
+  <div class="mt-auto pt-6 border-t border-outline-variant/15">
+    <button onclick="navigate('book')" class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold shadow-ambient hover:opacity-90 transition-opacity relative overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-1 bg-white/10"></div>
+      Book Now
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HOME SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-home" class="screen active flex-col min-h-screen overflow-y-auto pb-24 md:pb-8 md:ml-64">
+  <!-- Mobile Top Bar -->
+  <header class="mobile-only fixed top-0 w-full z-50 bg-emerald-50/70 backdrop-blur-3xl flex justify-between items-center px-6 h-20 shadow-[0_12px_40px_rgba(0,77,44,0.06)]">
+    <div class="text-2xl font-extrabold tracking-tighter text-emerald-950 font-headline">GOtaxi</div>
+    <div class="flex gap-4">
+      <button class="p-2 hover:bg-emerald-100/50 transition-colors rounded-full active:scale-95"><span class="material-symbols-outlined text-emerald-900">notifications</span></button>
+      <button onclick="navigate('profile')" class="p-2 hover:bg-emerald-100/50 transition-colors rounded-full active:scale-95"><span class="material-symbols-outlined text-emerald-900">account_circle</span></button>
+    </div>
+  </header>
+
+  <main class="flex-1 pt-24 md:pt-12 pb-12 px-6 md:px-12 flex flex-col items-center">
+    <div class="w-full max-w-3xl flex flex-col gap-8 md:gap-12 mt-4 md:mt-12">
+      <!-- Hero Search -->
+      <section class="flex flex-col gap-6">
+        <h1 class="font-headline text-4xl md:text-[3.5rem] font-extrabold tracking-tight text-primary leading-tight md:-ml-6">Kahan jana hai?</h1>
+        <div onclick="navigate('book')" class="glass-panel rounded-xl p-2 flex items-center gap-2 shadow-[0_12px_40px_rgba(0,77,44,0.06)] cursor-pointer hover:bg-surface-container-lowest transition-all">
+          <div class="pl-4 flex items-center text-primary"><span class="material-symbols-outlined">search</span></div>
+          <span class="flex-1 text-lg font-medium text-on-surface-variant/60 h-14 flex items-center">Search destination</span>
+          <div class="pr-2 flex gap-2">
+            <button onclick="event.stopPropagation();showToast('Schedule feature coming soon!')" class="hidden sm:flex bg-surface-container text-on-surface p-3 rounded-lg hover:bg-surface-variant transition-colors items-center justify-center active:scale-95"><span class="material-symbols-outlined">schedule</span></button>
+            <button onclick="event.stopPropagation();navigate('book')" class="bg-primary text-on-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary-container transition-colors shadow-sm relative overflow-hidden flex items-center gap-2 active:scale-95">
+              <div class="absolute inset-x-0 top-0 h-1 bg-white/10"></div>
+              <span>Book Now</span><span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bento Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-panel rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] md:col-span-2 flex flex-col gap-4">
+          <h2 class="font-headline text-xl font-bold text-on-surface">Saved Locations</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="navigate('book')" class="bg-surface-container-low hover:bg-surface-container-high transition-colors rounded-lg p-4 flex flex-col gap-2 items-start text-left border border-outline-variant/15 active:scale-95">
+              <div class="bg-primary-container/10 p-2 rounded-lg text-primary mb-1"><span class="material-symbols-outlined">work</span></div>
+              <span class="font-semibold text-on-surface">Office</span>
+              <span class="text-xs text-on-surface-variant truncate w-full">Arfa Tech Park, Lahore</span>
+            </button>
+            <button onclick="navigate('book')" class="bg-surface-container-low hover:bg-surface-container-high transition-colors rounded-lg p-4 flex flex-col gap-2 items-start text-left border border-outline-variant/15 active:scale-95">
+              <div class="bg-primary-container/10 p-2 rounded-lg text-primary mb-1"><span class="material-symbols-outlined">home</span></div>
+              <span class="font-semibold text-on-surface">Home</span>
+              <span class="text-xs text-on-surface-variant truncate w-full">DHA Phase 6, Lahore</span>
+            </button>
+          </div>
+        </div>
+        <div class="glass-panel rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] bg-gradient-to-br from-primary-fixed to-primary-fixed-dim border border-primary/10 flex flex-col justify-between">
+          <div class="flex justify-between items-start">
+            <div class="bg-primary/10 p-2 rounded-lg text-on-primary-fixed"><span class="material-symbols-outlined">local_offer</span></div>
+            <span class="text-xs font-bold text-on-primary-fixed uppercase tracking-wider bg-white/40 px-2 py-1 rounded">Promo</span>
+          </div>
+          <div class="mt-6">
+            <h3 class="font-headline text-2xl font-extrabold text-on-primary-fixed leading-none">20% Off</h3>
+            <p class="text-sm text-on-primary-fixed-variant mt-1 font-medium">on Premium Rides</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Available Rides Preview -->
+      <section class="glass-panel rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col gap-4">
+        <h2 class="font-headline text-xl font-bold text-on-surface">Available Rides</h2>
+        <div class="flex flex-col gap-2">
+          <div onclick="navigate('book')" class="bg-surface-container-low p-4 rounded-lg flex items-center justify-between hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant/15 group active:scale-[0.99]">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-12 bg-surface-container flex items-center justify-center rounded-lg">
+                <span class="material-symbols-outlined text-primary text-3xl">directions_car</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface">GO Premium</h4>
+                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> 4 seats • 3 mins</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-lg text-on-surface">PKR 450</div>
+              <div class="text-xs text-on-surface-variant group-hover:opacity-100 opacity-0 transition-opacity line-through">PKR 560</div>
+            </div>
+          </div>
+          <div onclick="navigate('book')" class="bg-surface-container-low p-4 rounded-lg flex items-center justify-between hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant/15 group active:scale-[0.99]">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-12 bg-surface-container flex items-center justify-center rounded-lg">
+                <span class="material-symbols-outlined text-secondary text-3xl">motorcycle</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-on-surface">GO Bike</h4>
+                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> 1 seat • 2 mins</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-lg text-on-surface">PKR 180</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-emerald-50/70 backdrop-blur-3xl rounded-t-3xl shadow-[0_-8px_30px_rgba(0,77,44,0.08)] z-50">
+    <button onclick="navigate('home')" class="nav-item active flex flex-col items-center justify-center px-5 py-2 transition-all active:scale-90" id="nav-home"><span class="material-symbols-outlined fill-icon">home</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Home</span></button>
+    <button onclick="navigate('book')" class="nav-item flex flex-col items-center justify-center text-zinc-500 px-5 py-2 hover:text-emerald-700 transition-all active:scale-90" id="nav-book"><span class="material-symbols-outlined">directions_car</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Ride</span></button>
+    <button onclick="navigate('track')" class="nav-item flex flex-col items-center justify-center text-zinc-500 px-5 py-2 hover:text-emerald-700 transition-all active:scale-90" id="nav-track"><span class="material-symbols-outlined">near_me</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Track</span></button>
+    <button onclick="navigate('profile')" class="nav-item flex flex-col items-center justify-center text-zinc-500 px-5 py-2 hover:text-emerald-700 transition-all active:scale-90" id="nav-profile"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Profile</span></button>
+    <button onclick="navigate('driver')" class="nav-item flex flex-col items-center justify-center text-zinc-500 px-5 py-2 hover:text-emerald-700 transition-all active:scale-90" id="nav-driver"><span class="material-symbols-outlined">local_taxi</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Driver</span></button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     BOOK A RIDE SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-book" class="screen flex-col h-screen overflow-hidden md:ml-64">
+  <!-- Map Canvas -->
+  <div class="flex-grow flex relative bg-surface-container overflow-hidden h-full min-h-screen md:min-h-0">
+    <!-- Simulated Map -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-100 via-emerald-50 to-teal-50">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="opacity-60">
+        <defs><pattern id="mapgrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#a7f3d0" stroke-width="0.6"/></pattern></defs>
+        <rect width="100%" height="100%" fill="url(#mapgrid)"/>
+        <line x1="0" y1="90" x2="100%" y2="110" stroke="#34d399" stroke-width="4"/>
+        <line x1="0" y1="200" x2="100%" y2="185" stroke="#6ee7b7" stroke-width="2"/>
+        <line x1="28%" y1="0" x2="32%" y2="100%" stroke="#6ee7b7" stroke-width="3"/>
+        <line x1="68%" y1="0" x2="63%" y2="100%" stroke="#a7f3d0" stroke-width="2"/>
+        <circle cx="38%" cy="65%" r="5" fill="#006397" opacity="0.9"/>
+        <circle cx="62%" cy="32%" r="5" fill="#00341c" opacity="0.9"/>
+        <path d="M 38% 65% Q 52% 50% 62% 32%" fill="none" stroke="#00341c" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.7"/>
+        <circle cx="30%" cy="48%" r="4" fill="#004d2c" opacity="0.6"/>
+        <circle cx="55%" cy="75%" r="4" fill="#004d2c" opacity="0.6"/>
+        <circle cx="72%" cy="55%" r="4" fill="#73d9b5" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-bright/30 to-surface-bright/10 pointer-events-none"></div>
+
+    <!-- Floating top bar -->
+    <div class="absolute top-4 left-4 right-4 flex justify-between items-center z-10 pointer-events-none">
+      <div class="glass-panel px-5 py-3 rounded-full shadow-[0_12px_40px_rgba(0,52,28,0.06)] pointer-events-auto flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-lg">my_location</span>
+        <span class="font-medium text-on-surface text-sm">Finding optimal routes...</span>
+      </div>
+      <div class="flex flex-col gap-2 pointer-events-auto">
+        <!-- Taxi icons on map -->
+      </div>
+    </div>
+
+    <!-- Taxi markers -->
+    <span class="material-symbols-outlined absolute text-primary z-10 bg-surface-container-lowest rounded-full p-2 text-lg shadow-md" style="top:25%;left:30%;transform:rotate(45deg)">local_taxi</span>
+    <span class="material-symbols-outlined absolute text-primary z-10 bg-surface-container-lowest rounded-full p-2 text-lg shadow-md" style="top:58%;left:67%;transform:rotate(-15deg)">local_taxi</span>
+    <span class="material-symbols-outlined absolute text-primary z-10 bg-surface-container-lowest rounded-full p-2 text-lg shadow-md" style="top:75%;left:20%;transform:rotate(110deg)">local_taxi</span>
+
+    <!-- Mobile back button -->
+    <button onclick="navigate('home')" class="mobile-only absolute top-4 left-4 z-20 bg-surface-container-lowest rounded-full p-2 shadow-md active:scale-95">
+      <span class="material-symbols-outlined text-on-surface">arrow_back</span>
+    </button>
+
+    <!-- Negotiation Panel (Right / Bottom on mobile) -->
+    <div class="absolute bottom-0 left-0 right-0 h-[65%] md:h-full md:top-0 md:right-0 md:left-auto md:w-[480px] bg-surface-container-lowest overflow-y-auto z-20 shadow-[-12px_0_40px_rgba(0,52,28,0.04)] flex flex-col border-t md:border-t-0 md:border-l border-outline-variant/20 rounded-t-2xl md:rounded-none">
+      <!-- Drag handle (mobile only) -->
+      <div class="mobile-only flex justify-center pt-3 pb-1 flex-shrink-0"><div class="w-10 h-1 rounded-full bg-outline-variant/40"></div></div>
+      <!-- Panel Header -->
+      <div class="p-4 md:p-8 pb-2 md:pb-3 flex-shrink-0">
+        <h2 class="text-2xl md:text-[3.5rem] font-headline font-bold text-primary tracking-tight leading-none mb-1 md:mb-2">Offer Fare</h2>
+        <p class="text-on-surface-variant text-sm md:text-lg">Set your price and see live bids.</p>
+      </div>
+      <!-- Content -->
+      <div class="flex-grow px-5 md:px-8 pt-2 md:pt-4 flex flex-col gap-3 md:gap-5 pb-2 overflow-y-auto">
+        <!-- Route Details -->
+        <div class="bg-surface-container-low rounded-xl p-5 relative border border-outline-variant/10">
+          <div class="absolute left-8 top-8 bottom-8 w-px bg-outline-variant opacity-30"></div>
+          <div class="flex items-start gap-4 mb-5 relative">
+            <div class="w-3 h-3 rounded-full bg-primary mt-1.5 z-10"></div>
+            <div>
+              <p class="text-xs font-medium text-on-surface-variant mb-0.5 uppercase tracking-wider">Pickup</p>
+              <p class="text-on-surface font-semibold">Clifton Block 5, Karachi</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 relative">
+            <div class="w-3 h-3 rounded-full border-2 border-primary mt-1.5 z-10 bg-surface-container-low"></div>
+            <div>
+              <p class="text-xs font-medium text-on-surface-variant mb-0.5 uppercase tracking-wider">Dropoff</p>
+              <input id="dropoffInput" type="text" placeholder="Where to?" class="bg-transparent border-none p-0 text-on-surface font-semibold focus:ring-0 w-full placeholder:text-on-surface-variant/50"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fare Input -->
+        <div>
+          <label class="block text-sm font-medium text-on-surface-variant mb-2 ml-1">Your Offer</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-on-surface-variant font-headline">PKR</span>
+            <input id="fareInput" class="w-full bg-surface-container-low text-on-surface font-headline font-bold text-3xl rounded-xl py-4 pl-16 pr-4 focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:outline-none transition-all border-none" placeholder="0" type="number" value="450"/>
+          </div>
+        </div>
+
+        <!-- Vehicle Type -->
+        <div>
+          <p class="text-sm font-medium text-on-surface-variant mb-3 ml-1">Vehicle Type</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="selectType(this,'Bike')" class="rtype bg-surface-container-low rounded-lg p-3 flex items-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/10 active:scale-95">
+              <span class="material-symbols-outlined text-primary">motorcycle</span>
+              <span class="font-semibold text-sm">Bike</span>
+            </button>
+            <button onclick="selectType(this,'Rickshaw')" class="rtype bg-surface-container-low rounded-lg p-3 flex items-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/10 active:scale-95">
+              <span class="material-symbols-outlined text-primary">electric_rickshaw</span>
+              <span class="font-semibold text-sm">Rickshaw</span>
+            </button>
+            <button onclick="selectType(this,'Economy')" class="rtype active bg-surface-container-low rounded-lg p-3 flex items-center gap-2 border border-outline-variant/10 active:scale-95">
+              <span class="material-symbols-outlined text-primary">minor_crash</span>
+              <span class="font-semibold text-sm">Economy</span>
+            </button>
+            <button onclick="selectType(this,'Premium')" class="rtype bg-surface-container-low rounded-lg p-3 flex items-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/10 active:scale-95">
+              <span class="material-symbols-outlined text-primary">directions_car</span>
+              <span class="font-semibold text-sm">Premium</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Bids -->
+        <div>
+          <div class="flex justify-between items-center mb-3 px-1">
+            <h3 class="font-headline font-bold text-xl text-primary">Live Driver Bids</h3>
+            <span class="flex h-3 w-3 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-container opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary-container"></span>
+            </span>
+          </div>
+          <div class="flex flex-col gap-3">
+            <!-- Bid 1 -->
+            <div onclick="acceptBid('Ahmed Khan','PKR 450')" class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_16px_rgba(0,52,28,0.04)] border border-outline-variant/20 flex justify-between items-center hover:shadow-[0_8px_24px_rgba(0,52,28,0.08)] transition-all cursor-pointer group">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center text-white font-bold text-sm ring-2 ring-primary/10">AK</div>
+                <div>
+                  <p class="font-bold text-on-surface">Ahmed Khan</p>
+                  <p class="text-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                    <span class="material-symbols-outlined fill-icon text-sm text-tertiary-container">star</span> 4.9 <span class="mx-1">•</span> 3 mins
+                  </p>
+                </div>
+              </div>
+              <div class="text-right flex flex-col items-end">
+                <p class="font-headline font-bold text-2xl text-primary">PKR 450</p>
+                <button class="text-sm font-bold text-primary-container group-hover:text-primary transition-colors uppercase tracking-wider mt-1">Accept</button>
+              </div>
+            </div>
+            <!-- Bid 2 -->
+            <div onclick="acceptBid('Sarah J.','PKR 480')" class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_16px_rgba(0,52,28,0.04)] border border-outline-variant/20 flex justify-between items-center hover:shadow-[0_8px_24px_rgba(0,52,28,0.08)] transition-all cursor-pointer group opacity-80 hover:opacity-100">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center text-white font-bold text-sm ring-2 ring-outline-variant/20">SJ</div>
+                <div>
+                  <p class="font-bold text-on-surface">Sarah J.</p>
+                  <p class="text-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                    <span class="material-symbols-outlined fill-icon text-sm text-tertiary-container">star</span> 5.0 <span class="mx-1">•</span> 5 mins
+                  </p>
+                </div>
+              </div>
+              <div class="text-right flex flex-col items-end">
+                <p class="font-headline font-bold text-2xl text-on-surface-variant group-hover:text-on-surface">PKR 480</p>
+                <button class="text-sm font-bold text-primary-container group-hover:text-primary transition-colors uppercase tracking-wider mt-1">Accept</button>
+              </div>
+            </div>
+            <!-- Bid 3 -->
+            <div onclick="acceptBid('Usman R.','PKR 600')" class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/20 flex justify-between items-center cursor-pointer group opacity-60 hover:opacity-80 transition-opacity">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white font-bold text-sm">UR</div>
+                <div>
+                  <p class="font-bold text-on-surface">Usman R.</p>
+                  <p class="text-sm text-on-surface-variant">4.7 <span class="mx-1">•</span> 8 mins</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-headline font-bold text-2xl text-on-surface-variant">PKR 600</p>
+                <button class="text-sm font-bold text-primary-container group-hover:text-primary uppercase tracking-wider mt-1">Accept</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="p-4 md:p-8 pt-3 md:pt-4 bg-surface-container-lowest border-t border-outline-variant/10 flex-shrink-0">
+        <button onclick="broadcastOffer()" class="w-full bg-primary text-on-primary font-headline font-bold text-lg py-4 rounded-xl shadow-[0_8px_24px_rgba(0,52,28,0.15)] hover:shadow-[0_12px_32px_rgba(0,52,28,0.2)] hover:bg-primary-container transition-all relative overflow-hidden active:scale-[0.98]">
+          Broadcast Offer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LIVE TRACKING SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-track" class="screen flex-col h-screen overflow-hidden relative md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only fixed top-0 w-full z-50 bg-surface-bright/80 backdrop-blur-2xl flex justify-between items-center px-6 h-20 shadow-[0_12px_40px_rgba(0,77,44,0.04)]">
+    <h1 class="font-headline text-2xl font-black text-primary tracking-tighter">GOtaxi</h1>
+    <div class="flex items-center space-x-4 text-primary">
+      <button class="p-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95"><span class="material-symbols-outlined">notifications</span></button>
+      <button onclick="navigate('profile')" class="p-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+
+  <!-- Full Screen Map -->
+  <div class="absolute inset-0 z-0 bg-surface-container-low">
+    <div class="w-full h-full bg-gradient-to-br from-slate-200 via-emerald-50 to-blue-100">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs><pattern id="trackgrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#a7f3d0" stroke-width="0.7"/></pattern></defs>
+        <rect width="100%" height="100%" fill="url(#trackgrid)"/>
+        <line x1="0" y1="100" x2="100%" y2="120" stroke="#34d399" stroke-width="5"/>
+        <line x1="0" y1="220" x2="100%" y2="200" stroke="#a7f3d0" stroke-width="2"/>
+        <line x1="32%" y1="0" x2="37%" y2="100%" stroke="#6ee7b7" stroke-width="3"/>
+        <line x1="63%" y1="0" x2="58%" y2="100%" stroke="#a7f3d0" stroke-width="2"/>
+        <!-- Route -->
+        <path d="M 55% 35% Q 51% 53% 45% 63%" fill="none" stroke="#00341c" stroke-width="3" stroke-dasharray="8,4" opacity="0.8"/>
+        <!-- User pin -->
+        <circle cx="45%" cy="63%" r="8" fill="#006397" opacity="0.9"/>
+        <circle cx="45%" cy="63%" r="22" fill="#006397" opacity="0.12"/>
+        <!-- Driver pin -->
+        <circle cx="55%" cy="35%" r="10" fill="#00341c" opacity="0.9"/>
+        <circle cx="55%" cy="35%" r="28" fill="#00341c" opacity="0.08"/>
+      </svg>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-bright/30 to-surface-bright/10 pointer-events-none"></div>
+  </div>
+
+  <!-- Tracking Overlay -->
+  <div class="relative z-10 h-full flex flex-col justify-end md:justify-between p-4 md:p-8 pt-24 md:pt-8 pointer-events-none">
+    <!-- Top Status Pill (Desktop) -->
+    <div class="desktop-only flex justify-end w-full pointer-events-auto">
+      <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-full px-6 py-3 shadow-[0_12px_40px_rgba(0,77,44,0.08)] flex items-center space-x-3 border border-outline-variant/10">
+        <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-fixed opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span></span>
+        <span class="font-headline font-bold text-primary tracking-tight">Driver is 3 mins away</span>
+      </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div class="w-full max-w-md mx-auto md:mx-0 md:ml-auto md:mr-12 space-y-3 pointer-events-auto pb-28 md:pb-0">
+      <!-- ETA Card -->
+      <div class="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-2xl p-4 md:p-6 shadow-[0_12px_40px_rgba(0,77,44,0.12)] border border-outline-variant/20 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4">
+          <div class="bg-primary-fixed/30 text-on-primary-fixed px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase">En Route</div>
+        </div>
+        <h2 class="font-headline text-2xl md:text-3xl font-extrabold text-primary tracking-tight mb-1">3 <span class="text-lg md:text-xl text-on-surface-variant font-semibold">mins</span></h2>
+        <div class="flex items-center text-sm text-on-surface-variant mb-6 flex-wrap gap-x-2">
+          <span>0.8 km away</span><span class="text-outline-variant">•</span>
+          <span>Arrival 09:42 AM</span><span class="text-outline-variant">•</span>
+          <span class="font-bold text-primary">PKR 450</span>
+        </div>
+        <div class="space-y-4 relative">
+          <div class="absolute left-[11px] top-4 bottom-4 w-0.5 bg-surface-container-highest rounded-full"></div>
+          <div class="flex items-start space-x-4 relative z-10">
+            <div class="w-6 h-6 rounded-full bg-surface-container-lowest border-2 border-primary flex items-center justify-center mt-0.5 shadow-sm"><div class="w-2 h-2 rounded-full bg-primary"></div></div>
+            <div><p class="text-xs text-on-surface-variant font-medium mb-0.5">Pickup</p><p class="text-sm font-semibold text-on-surface">Clifton Block 5</p></div>
+          </div>
+          <div class="flex items-start space-x-4 relative z-10">
+            <div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mt-0.5 shadow-sm"><span class="material-symbols-outlined text-sm">location_on</span></div>
+            <div><p class="text-xs text-on-surface-variant font-medium mb-0.5">Destination</p><p class="text-sm font-semibold text-on-surface">Liberty Market, Gulberg III</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Driver Card -->
+      <div class="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-2xl p-4 shadow-[0_12px_40px_rgba(0,77,44,0.08)] border border-outline-variant/10">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-800 flex items-center justify-center text-white font-bold text-lg border-2 border-surface-container-lowest shadow-sm">AK</div>
+              <div class="absolute -bottom-1 -right-1 bg-surface-container-lowest rounded-full p-0.5">
+                <div class="bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center">4.9 <span class="material-symbols-outlined fill-icon text-[10px] ml-0.5">star</span></div>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-headline font-bold text-lg text-on-surface">Ahmed Khan</h3>
+              <p class="text-sm text-on-surface-variant">GOtaxi Economy</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant/20 inline-block mb-1">
+              <span class="font-headline font-bold text-primary tracking-widest text-sm">LED-4091</span>
+            </div>
+            <p class="text-xs text-on-surface-variant font-medium">Suzuki Alto</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4">
+          <button onclick="showToast('Calling driver...')" class="bg-surface-container-high hover:bg-surface-variant transition-colors rounded-xl py-3 flex flex-col items-center justify-center text-on-surface-variant gap-1 shadow-sm active:scale-95">
+            <span class="material-symbols-outlined text-primary">call</span><span class="text-[10px] font-semibold uppercase tracking-wider">Call</span>
+          </button>
+          <button onclick="showToast('Ride shared!')" class="bg-surface-container-high hover:bg-surface-variant transition-colors rounded-xl py-3 flex flex-col items-center justify-center text-on-surface-variant gap-1 shadow-sm active:scale-95">
+            <span class="material-symbols-outlined text-primary">share</span><span class="text-[10px] font-semibold uppercase tracking-wider">Share</span>
+          </button>
+          <button onclick="showToast('Emergency SOS sent!')" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl py-3 flex flex-col items-center justify-center gap-1 shadow-sm border border-error/10 active:scale-95">
+            <span class="material-symbols-outlined text-error">gpp_maybe</span><span class="text-[10px] font-semibold uppercase tracking-wider text-error">SOS</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Rate after trip -->
+      <button onclick="navigate('rate')" class="w-full bg-surface-container-lowest/90 backdrop-blur-xl text-primary font-headline font-bold py-3 rounded-xl border border-outline-variant/20 hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+        Trip Complete → Rate Your Ride
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface-bright/90 backdrop-blur-3xl z-50 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,77,44,0.08)]">
+    <button onclick="navigate('home')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 active:scale-90 transition-all"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Home</span></button>
+    <button onclick="navigate('book')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 active:scale-90 transition-all"><span class="material-symbols-outlined">directions_car</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Ride</span></button>
+    <button class="flex flex-col items-center bg-primary-container/20 text-primary rounded-2xl px-5 py-2 active:scale-90"><span class="material-symbols-outlined fill-icon">near_me</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1 font-bold">Track</span></button>
+    <button onclick="navigate('profile')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 active:scale-90 transition-all"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Profile</span></button>
+    <button onclick="navigate('driver')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 active:scale-90 transition-all"><span class="material-symbols-outlined">local_taxi</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Driver</span></button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ACTIVITY SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-activity" class="screen flex-col min-h-screen bg-background pb-24 md:pb-0 md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only w-full sticky top-0 z-40 bg-background flex justify-between items-center px-6 py-4">
+    <h1 class="text-2xl font-black tracking-tighter text-primary font-headline">GOtaxi</h1>
+    <div class="flex items-center gap-4">
+      <button class="text-primary hover:bg-surface-container-low p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">notifications</span></button>
+      <button onclick="navigate('profile')" class="text-primary hover:bg-surface-container-low p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-6 pt-8 md:pt-16 pb-12 w-full">
+    <!-- Asymmetric Header -->
+    <div class="mb-12 pl-4 md:pl-12">
+      <h2 class="font-headline text-4xl md:text-[3.5rem] leading-none tracking-[-0.02em] font-extrabold text-primary mb-2">Activity</h2>
+      <p class="font-body text-on-surface-variant text-lg">Your recent journeys and upcoming reservations.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex gap-3 mb-8 overflow-x-auto pb-2 no-scroll pl-4 md:pl-12">
+      <button onclick="filterRides(this,'all')" class="filter-btn bg-primary text-on-primary px-5 py-2 rounded-lg font-label font-medium text-sm whitespace-nowrap active:scale-95">All Rides</button>
+      <button onclick="filterRides(this,'completed')" class="filter-btn bg-surface-container-highest text-on-surface px-5 py-2 rounded-lg font-label font-medium text-sm hover:bg-surface-container-lowest transition-all whitespace-nowrap active:scale-95">Completed</button>
+      <button onclick="filterRides(this,'upcoming')" class="filter-btn bg-surface-container-highest text-on-surface px-5 py-2 rounded-lg font-label font-medium text-sm hover:bg-surface-container-lowest transition-all whitespace-nowrap active:scale-95">Upcoming</button>
+      <button onclick="showToast('Date picker coming soon!')" class="bg-surface-container-highest text-on-surface px-5 py-2 rounded-lg font-label font-medium text-sm flex items-center gap-2 hover:bg-surface-container-lowest transition-all whitespace-nowrap active:scale-95"><span class="material-symbols-outlined text-lg">calendar_month</span>Date Range</button>
+    </div>
+
+    <!-- Ride List -->
+    <div class="flex flex-col gap-6 relative pl-4 md:pl-12">
+      <!-- Upcoming -->
+      <div class="bg-surface-container-low rounded-xl p-6 relative group transition-all duration-300 hover:shadow-md" data-type="upcoming">
+        <div class="absolute -left-3 top-8 w-6 h-6 bg-tertiary-container rounded-full items-center justify-center border-4 border-background desktop-only flex">
+          <div class="w-2 h-2 bg-primary-fixed rounded-full"></div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="bg-tertiary-container text-primary-fixed px-3 py-1 rounded-full font-label text-xs font-bold uppercase tracking-wider">Upcoming</span>
+              <span class="font-label text-sm text-on-surface-variant font-medium">Today, 4:30 PM</span>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center mt-1">
+                <span class="material-symbols-outlined fill-icon text-primary text-xl">my_location</span>
+                <div class="w-0.5 h-10 bg-surface-container-highest my-1 rounded-full"></div>
+                <span class="material-symbols-outlined fill-icon text-primary text-xl">location_on</span>
+              </div>
+              <div class="flex flex-col justify-between py-1">
+                <div><p class="font-headline font-bold text-on-surface">Centaurus Mall</p><p class="font-body text-xs text-on-surface-variant">F-8 Markaz, Islamabad</p></div>
+                <div class="mt-4"><p class="font-headline font-bold text-on-surface">Islamabad International Airport</p><p class="font-body text-xs text-on-surface-variant">New Islamabad Airport Road</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col md:items-end justify-between pt-4 md:pt-0">
+            <div class="text-left md:text-right mb-4">
+              <p class="font-headline text-2xl font-bold text-primary">Rs. 3,450</p>
+              <p class="font-body text-xs text-on-surface-variant">Estimated Fare</p>
+            </div>
+            <div class="flex items-center gap-3 bg-surface-container p-3 rounded-lg">
+              <span class="material-symbols-outlined text-on-surface-variant">schedule</span>
+              <p class="font-label text-sm font-semibold text-on-surface">Driver assigned soon</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed 1 -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.04)] relative group transition-all duration-300 hover:shadow-md cursor-pointer" onclick="showToast('Receipt for Rs. 850 ride')" data-type="completed">
+        <div class="absolute -left-3 top-8 w-6 h-6 bg-surface-container-highest rounded-full items-center justify-center border-4 border-background desktop-only flex">
+          <div class="w-2 h-2 bg-outline rounded-full"></div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-label text-xs font-bold uppercase tracking-wider">Completed</span>
+              <span class="font-label text-sm text-on-surface-variant font-medium">Yesterday, 9:15 AM</span>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center mt-1">
+                <span class="material-symbols-outlined fill-icon text-outline text-xl">my_location</span>
+                <div class="w-0.5 h-10 bg-surface-container-highest my-1 rounded-full"></div>
+                <span class="material-symbols-outlined fill-icon text-primary text-xl">location_on</span>
+              </div>
+              <div class="flex flex-col justify-between py-1">
+                <div><p class="font-headline font-bold text-on-surface">Blue Area</p><p class="font-body text-xs text-on-surface-variant">Jinnah Avenue, Islamabad</p></div>
+                <div class="mt-4"><p class="font-headline font-bold text-on-surface">F-11 Markaz</p><p class="font-body text-xs text-on-surface-variant">F-11, Islamabad</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col md:items-end justify-between bg-surface-container-low rounded-lg p-4 md:bg-transparent md:p-0">
+            <div class="flex justify-between md:flex-col md:items-end w-full mb-4">
+              <div class="text-left md:text-right">
+                <p class="font-headline text-2xl font-bold text-primary">Rs. 850</p>
+                <p class="font-body text-xs text-on-surface-variant">GO Economy</p>
+              </div>
+              <button class="md:mt-2 text-primary font-label text-sm font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-lg">receipt_long</span>Receipt</button>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center text-white font-bold text-xs">UR</div>
+              <div><p class="font-label text-sm font-semibold text-on-surface">Usman R.</p><p class="font-body text-xs text-on-surface-variant">Toyota Corolla • LEB-4592</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed 2 -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.04)] relative group transition-all duration-300 hover:shadow-md cursor-pointer" onclick="showToast('Receipt for Rs. 2,100 ride')" data-type="completed">
+        <div class="absolute -left-3 top-8 w-6 h-6 bg-surface-container-highest rounded-full items-center justify-center border-4 border-background desktop-only flex">
+          <div class="w-2 h-2 bg-outline rounded-full"></div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-label text-xs font-bold uppercase tracking-wider">Completed</span>
+              <span class="font-label text-sm text-on-surface-variant font-medium">Oct 12, 6:45 PM</span>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center mt-1">
+                <span class="material-symbols-outlined fill-icon text-outline text-xl">my_location</span>
+                <div class="w-0.5 h-10 bg-surface-container-highest my-1 rounded-full"></div>
+                <span class="material-symbols-outlined fill-icon text-primary text-xl">location_on</span>
+              </div>
+              <div class="flex flex-col justify-between py-1">
+                <div><p class="font-headline font-bold text-on-surface">DHA Phase 2</p><p class="font-body text-xs text-on-surface-variant">Sector G, Islamabad</p></div>
+                <div class="mt-4"><p class="font-headline font-bold text-on-surface">Monal Restaurant</p><p class="font-body text-xs text-on-surface-variant">Pir Sohawa Road</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col md:items-end justify-between bg-surface-container-low rounded-lg p-4 md:bg-transparent md:p-0">
+            <div class="flex justify-between md:flex-col md:items-end w-full mb-4">
+              <div class="text-left md:text-right">
+                <p class="font-headline text-2xl font-bold text-primary">Rs. 2,100</p>
+                <p class="font-body text-xs text-on-surface-variant">GO Premium</p>
+              </div>
+              <button class="md:mt-2 text-primary font-label text-sm font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-lg">receipt_long</span>Receipt</button>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center text-white font-bold text-xs">AM</div>
+              <div><p class="font-label text-sm font-semibold text-on-surface">Ali M.</p><p class="font-body text-xs text-on-surface-variant">Honda Civic • RIZ-128</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center">
+      <button onclick="showToast('Loading more activity...')" class="text-primary font-headline font-bold hover:bg-surface-container-low px-6 py-3 rounded-lg transition-colors inline-flex items-center gap-2 active:scale-95">
+        Load More Activity <span class="material-symbols-outlined text-xl">expand_more</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only fixed bottom-0 w-full rounded-t-3xl z-50 bg-white/70 backdrop-blur-3xl shadow-[0_-12px_40px_rgba(0,77,44,0.06)] flex justify-around items-center px-4 pb-8 pt-4 text-[10px] font-semibold uppercase tracking-wider">
+    <button onclick="navigate('activity')" class="flex flex-col items-center justify-center bg-primary-fixed text-on-primary-fixed rounded-xl px-5 py-2 active:scale-90"><span class="material-symbols-outlined fill-icon mb-1">history</span>Activity</button>
+    <button onclick="navigate('wallet')" class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">account_balance_wallet</span>Wallet</button>
+    <button onclick="navigate('safety')" class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">health_and_safety</span>Safety</button>
+    <button onclick="showToast('Rating feature coming soon!')" class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">star_rate</span>Rating</button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     WALLET SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-wallet" class="screen flex-col min-h-screen bg-background pb-24 md:pb-8 md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50 bg-surface-container-low">
+    <div class="text-2xl font-black tracking-tighter text-primary font-headline">GOtaxi</div>
+    <div class="flex space-x-4">
+      <button class="text-primary hover:bg-surface-container p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">notifications</span></button>
+      <button onclick="navigate('profile')" class="text-primary hover:bg-surface-container p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+
+  <!-- Desktop Header -->
+  <header class="desktop-only flex justify-between items-center px-8 py-6 w-full sticky top-0 z-40 bg-background/90 backdrop-blur-md">
+    <h2 class="font-headline tracking-tight font-extrabold text-3xl text-primary">Wallet &amp; Payments</h2>
+    <button class="text-on-surface-variant hover:bg-surface-container p-2 rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+  </header>
+
+  <div class="px-6 md:px-8 py-6 flex-1 max-w-5xl w-full mx-auto space-y-8">
+    <h2 class="mobile-only font-headline tracking-tight font-extrabold text-3xl text-primary mb-2">Wallet &amp; Payments</h2>
+
+    <!-- Top Bento -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Balance Card -->
+      <div class="md:col-span-2 bg-surface-container-lowest rounded-xl p-8 shadow-[0_12px_40px_rgba(0,77,44,0.06)] relative overflow-hidden flex flex-col justify-between min-h-[240px]">
+        <div class="absolute -right-10 -top-10 w-48 h-48 bg-primary-fixed opacity-20 rounded-full blur-3xl"></div>
+        <div>
+          <p class="font-body text-sm font-medium text-on-surface-variant uppercase tracking-wider mb-2">Total Balance</p>
+          <div class="flex items-baseline space-x-2">
+            <span class="font-headline font-medium text-xl text-on-surface-variant">Rs.</span>
+            <span class="font-headline font-extrabold text-4xl md:text-5xl tracking-tighter text-primary">12,450</span>
+          </div>
+        </div>
+        <div class="flex space-x-4 mt-8">
+          <button onclick="showToast('Adding funds...')" class="btn-gradient text-on-primary px-6 py-3 rounded-lg font-body font-semibold text-sm shadow-md hover:opacity-90 transition-opacity active:scale-95">Add Funds</button>
+          <button onclick="showToast('Withdrawal initiated!')" class="bg-surface-container text-on-surface px-6 py-3 rounded-lg font-body font-semibold text-sm hover:bg-surface-container-high transition-colors active:scale-95">Withdraw</button>
+        </div>
+      </div>
+      <!-- Refer Card -->
+      <div class="bg-primary rounded-xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[240px] text-on-primary shadow-[0_12px_40px_rgba(0,77,44,0.06)]">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-container opacity-50"></div>
+        <div class="relative z-10">
+          <span class="material-symbols-outlined text-primary-fixed mb-4" style="font-size:32px">redeem</span>
+          <h3 class="font-headline font-bold text-xl leading-tight mb-2">Refer &amp; Earn</h3>
+          <p class="font-body text-sm opacity-80 mb-4">Get Rs. 500 off your next ride for every friend who joins.</p>
+        </div>
+        <button onclick="showToast('Referral link copied!')" class="relative z-10 bg-primary-fixed text-on-primary-fixed px-4 py-2 rounded-lg font-body font-semibold text-sm w-fit active:scale-95">Invite Friends</button>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <section class="mt-8">
+      <h3 class="font-headline font-bold text-xl text-primary mb-4 ml-2">Payment Methods</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between shadow-[0_12px_40px_rgba(0,77,44,0.06)] ring-2 ring-outline-variant/15">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-on-surface-variant"><span class="material-symbols-outlined">payments</span></div>
+            <div><p class="font-headline font-bold text-on-surface">Cash</p><p class="font-body text-xs text-primary font-medium">Default</p></div>
+          </div>
+          <span class="material-symbols-outlined fill-icon text-primary-fixed">check_circle</span>
+        </div>
+        <div onclick="showToast('Easypaisa settings')" class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between shadow-[0_12px_40px_rgba(0,77,44,0.06)] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-95">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-emerald-100 flex items-center justify-center rounded-full text-emerald-700 font-bold text-xs">EP</div>
+            <div><p class="font-headline font-bold text-on-surface">Easypaisa</p><p class="font-body text-xs text-on-surface-variant">Linked</p></div>
+          </div>
+          <button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+        </div>
+        <div onclick="showToast('JazzCash coming soon!')" class="bg-surface-container-lowest rounded-xl p-5 flex items-center justify-between shadow-[0_12px_40px_rgba(0,77,44,0.06)] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-95">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-on-surface-variant"><span class="material-symbols-outlined">credit_card</span></div>
+            <div><p class="font-headline font-bold text-on-surface">**** 4242</p><p class="font-body text-xs text-on-surface-variant">Expires 12/25</p></div>
+          </div>
+          <button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+        </div>
+        <button onclick="showToast('Add payment method coming soon!')" class="bg-surface-container-low rounded-xl p-5 flex items-center justify-center border border-dashed border-outline-variant hover:bg-surface-container transition-colors min-h-[88px] active:scale-95">
+          <div class="flex items-center space-x-2 text-primary font-body font-medium"><span class="material-symbols-outlined">add</span><span>Add Payment Method</span></div>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only bg-white/70 backdrop-blur-3xl fixed bottom-0 w-full rounded-t-3xl z-50 shadow-[0_-12px_40px_rgba(0,77,44,0.06)] flex justify-around items-center px-4 pb-8 pt-4">
+    <button onclick="navigate('activity')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90 text-[10px] font-semibold uppercase tracking-wider"><span class="material-symbols-outlined mb-1">history</span>Activity</button>
+    <button class="flex flex-col items-center bg-primary-fixed text-on-primary-fixed rounded-xl px-5 py-2 active:scale-90 text-[10px] font-semibold uppercase tracking-wider"><span class="material-symbols-outlined fill-icon mb-1">account_balance_wallet</span>Wallet</button>
+    <button onclick="navigate('safety')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90 text-[10px] font-semibold uppercase tracking-wider"><span class="material-symbols-outlined mb-1">health_and_safety</span>Safety</button>
+    <button onclick="showToast('Rating coming soon!')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90 text-[10px] font-semibold uppercase tracking-wider"><span class="material-symbols-outlined mb-1">star_rate</span>Rating</button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PROFILE SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-profile" class="screen flex-col min-h-screen bg-surface pb-24 md:pb-8 md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only fixed top-0 w-full z-50 bg-emerald-50/70 backdrop-blur-3xl shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex justify-between items-center px-6 h-20">
+    <div class="text-2xl font-extrabold tracking-tighter text-emerald-950 font-headline">GOtaxi</div>
+    <div class="flex items-center gap-4">
+      <button class="text-emerald-900 hover:bg-emerald-100/50 p-2 rounded-full active:scale-95"><span class="material-symbols-outlined">notifications</span></button>
+      <button class="text-emerald-900 hover:bg-emerald-100/50 p-2 rounded-full active:scale-95"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+
+  <main class="flex-1 pt-24 md:pt-8 px-6 pb-24 md:pb-8 max-w-7xl mx-auto w-full">
+    <div class="mb-10 pl-2">
+      <h2 class="font-headline text-3xl md:text-5xl text-primary tracking-tight leading-tight">Welcome back,<br/>Sarah.</h2>
+      <p class="font-body text-on-surface-variant mt-2 text-lg">Manage your premium travel experience.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-min">
+      <!-- Profile Stats Card -->
+      <div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-5 md:p-8 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col md:flex-row items-center gap-6 md:gap-8 relative overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative w-28 h-28 flex-shrink-0">
+          <div class="w-full h-full rounded-full bg-gradient-to-br from-emerald-300 to-emerald-700 flex items-center justify-center text-white font-black text-4xl shadow-md">SJ</div>
+          <button onclick="showToast('Edit photo coming soon!')" class="absolute bottom-0 right-0 bg-primary text-on-primary p-2 rounded-full shadow-lg hover:bg-primary-container transition-colors active:scale-95">
+            <span class="material-symbols-outlined text-sm">edit</span>
+          </button>
+        </div>
+        <div class="flex-1 flex flex-col sm:flex-row gap-6 w-full justify-between">
+          <div>
+            <h3 class="font-headline text-2xl text-on-surface font-bold mb-1">Sarah Jenkins</h3>
+            <p class="font-label text-on-surface-variant flex items-center gap-1">
+              <span class="material-symbols-outlined fill-icon text-primary text-sm">verified</span> Premium Member
+            </p>
+          </div>
+          <div class="flex gap-6">
+            <div class="flex flex-col">
+              <span class="font-label text-sm text-on-surface-variant mb-1">Rider Rating</span>
+              <div class="flex items-center gap-1">
+                <span class="font-headline text-3xl font-bold text-primary">4.9</span>
+                <span class="material-symbols-outlined fill-icon text-primary-fixed-dim">star</span>
+              </div>
+            </div>
+            <div class="w-px bg-surface-container-high hidden sm:block"></div>
+            <div class="flex flex-col">
+              <span class="font-label text-sm text-on-surface-variant mb-1">Total Savings</span>
+              <span class="font-headline text-3xl font-bold text-tertiary-container">PKR 240</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Card -->
+      <div class="md:col-span-4 bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="font-headline text-xl font-bold text-on-surface">Payment</h3>
+          <button onclick="navigate('wallet')" class="text-primary hover:text-primary-container"><span class="material-symbols-outlined">add_circle</span></button>
+        </div>
+        <div class="flex-1 flex flex-col gap-4">
+          <div onclick="navigate('wallet')" class="bg-surface-container p-4 rounded-lg flex items-center justify-between group hover:bg-surface-container-low cursor-pointer border border-transparent hover:border-outline-variant/30 active:scale-95">
+            <div class="flex items-center gap-4">
+              <div class="bg-surface-container-lowest p-2 rounded shadow-sm"><span class="material-symbols-outlined text-primary">credit_card</span></div>
+              <div><p class="font-body font-semibold text-on-surface">•••• 4242</p><p class="font-label text-xs text-on-surface-variant">Primary • Exp 12/25</p></div>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100">chevron_right</span>
+          </div>
+          <div onclick="navigate('wallet')" class="bg-surface-container p-4 rounded-lg flex items-center justify-between group hover:bg-surface-container-low cursor-pointer border border-transparent hover:border-outline-variant/30 active:scale-95">
+            <div class="flex items-center gap-4">
+              <div class="bg-surface-container-lowest p-2 rounded shadow-sm font-headline font-bold text-on-surface text-sm">Pay</div>
+              <div><p class="font-body font-semibold text-on-surface">Digital Wallet</p><p class="font-label text-xs text-on-surface-variant">Connected</p></div>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100">chevron_right</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Favorites -->
+      <div class="md:col-span-4 bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="font-headline text-xl font-bold text-on-surface">Favorites</h3>
+          <button onclick="showToast('Edit favorites coming soon!')" class="text-primary font-label text-sm font-medium hover:text-primary-container">Edit</button>
+        </div>
+        <div class="flex-1 flex flex-col gap-4">
+          <div class="flex items-center gap-4 p-2 hover:bg-surface-container rounded-lg cursor-pointer active:scale-95">
+            <div class="bg-primary-container text-on-primary-container p-3 rounded-full"><span class="material-symbols-outlined">home_work</span></div>
+            <div><p class="font-body font-semibold text-on-surface">Office</p><p class="font-label text-sm text-on-surface-variant truncate w-40">Arfa Tech Park, Lahore</p></div>
+          </div>
+          <div class="flex items-center gap-4 p-2 hover:bg-surface-container rounded-lg cursor-pointer active:scale-95">
+            <div class="bg-surface-container-high text-on-surface p-3 rounded-full"><span class="material-symbols-outlined">apartment</span></div>
+            <div><p class="font-body font-semibold text-on-surface">Home</p><p class="font-label text-sm text-on-surface-variant truncate w-40">DHA Phase 6, Lahore</p></div>
+          </div>
+          <button onclick="showToast('Add location coming soon!')" class="flex items-center gap-4 p-2 hover:bg-surface-container rounded-lg mt-auto active:scale-95">
+            <div class="border-2 border-dashed border-outline-variant text-on-surface-variant p-2.5 rounded-full"><span class="material-symbols-outlined text-sm">add</span></div>
+            <p class="font-body font-medium text-on-surface-variant">Add new place</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Rides -->
+      <div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)]">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="font-headline text-xl font-bold text-on-surface">Recent Rides</h3>
+          <button onclick="navigate('activity')" class="text-primary font-label text-sm font-medium flex items-center gap-1 hover:text-primary-container">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+        </div>
+        <div class="flex flex-col">
+          <div onclick="navigate('activity')" class="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 group cursor-pointer hover:bg-surface-container-low -mx-2 px-2 rounded-lg active:scale-[0.99]">
+            <div class="flex items-start gap-4 mb-3 sm:mb-0">
+              <div class="bg-surface-container p-3 rounded-lg flex-shrink-0"><span class="material-symbols-outlined text-primary">local_taxi</span></div>
+              <div><span class="font-body font-semibold text-on-surface">F-11 Markaz</span><span class="font-label text-sm text-on-surface-variant flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Yesterday, 09:42 AM</span></div>
+            </div>
+            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-6 pl-14 sm:pl-0">
+              <div class="text-right"><p class="font-headline font-bold text-on-surface">Rs. 850</p><span class="bg-primary-fixed text-on-primary-fixed text-xs font-bold px-2 py-0.5 rounded inline-block mt-1">Economy</span></div>
+              <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 hidden sm:block">chevron_right</span>
+            </div>
+          </div>
+          <div class="h-2 w-full"></div>
+          <div onclick="navigate('activity')" class="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 group cursor-pointer hover:bg-surface-container-low -mx-2 px-2 rounded-lg active:scale-[0.99]">
+            <div class="flex items-start gap-4 mb-3 sm:mb-0">
+              <div class="bg-surface-container p-3 rounded-lg flex-shrink-0"><span class="material-symbols-outlined text-primary">local_taxi</span></div>
+              <div><span class="font-body font-semibold text-on-surface">Islamabad Airport</span><span class="font-label text-sm text-on-surface-variant flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Oct 12, 14:30 PM</span></div>
+            </div>
+            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-6 pl-14 sm:pl-0">
+              <div class="text-right"><p class="font-headline font-bold text-on-surface">Rs. 3,450</p><span class="bg-surface-container-high text-on-surface text-xs font-bold px-2 py-0.5 rounded inline-block mt-1">Premium</span></div>
+              <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 hidden sm:block">chevron_right</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-emerald-50/70 backdrop-blur-3xl rounded-t-3xl shadow-[0_-8px_30px_rgba(0,77,44,0.08)] z-50">
+    <button onclick="navigate('home')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined mb-1">home</span><span class="text-[10px] font-medium tracking-wide uppercase">Home</span></button>
+    <button onclick="navigate('book')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined mb-1">directions_car</span><span class="text-[10px] font-medium tracking-wide uppercase">Ride</span></button>
+    <button onclick="navigate('track')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined mb-1">near_me</span><span class="text-[10px] font-medium tracking-wide uppercase">Track</span></button>
+    <button class="flex flex-col items-center bg-emerald-200/50 text-emerald-900 rounded-2xl px-5 py-2 active:scale-90"><span class="material-symbols-outlined fill-icon mb-1">person</span><span class="text-[10px] font-medium tracking-wide uppercase">Profile</span></button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DRIVER DASHBOARD SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-driver" class="screen flex-col h-screen bg-surface-container-low overflow-y-auto md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only flex justify-between items-center px-6 h-20 w-full bg-emerald-50/70 backdrop-blur-3xl fixed top-0 z-50 shadow-[0_12px_40px_rgba(0,77,44,0.06)]">
+    <h1 class="text-2xl font-extrabold tracking-tighter text-emerald-950 font-headline">GOtaxi</h1>
+    <div class="flex gap-4"><span class="material-symbols-outlined text-emerald-900">notifications</span><span class="material-symbols-outlined text-emerald-900">account_circle</span></div>
+  </header>
+
+  <div class="p-6 md:p-8 pt-24 md:pt-8 max-w-7xl mx-auto w-full flex-1 flex flex-col gap-8 pb-32 md:pb-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
+      <div>
+        <h2 class="font-headline text-4xl md:text-[3.5rem] leading-none tracking-tight text-primary mb-2 md:pl-4 md:-ml-4">Dashboard</h2>
+        <p class="font-body text-on-surface-variant text-lg">Live operations and earnings overview.</p>
+      </div>
+      <div class="glass-panel rounded-full px-6 py-3 flex items-center gap-4 ambient-shadow border border-white">
+        <span class="font-headline text-on-surface font-bold">Status</span>
+        <button onclick="showToast('Going offline...')" class="bg-primary-fixed hover:bg-primary-fixed-dim text-on-primary-fixed px-5 py-2 rounded-lg font-label text-sm font-semibold flex items-center gap-2 transition-colors active:scale-95">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Online
+        </button>
+      </div>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+      <!-- Live Requests Feed -->
+      <div class="lg:col-span-8 flex flex-col gap-4">
+        <div class="bg-surface-container-lowest rounded-xl p-6 ambient-shadow flex-1 flex flex-col ghost-border">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline text-2xl text-on-surface font-bold">Live Requests</h3>
+            <span class="bg-surface-container py-1 px-3 rounded-lg font-label text-sm text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-lg">sort</span>Nearest</span>
+          </div>
+          <div class="flex flex-col gap-3">
+            <!-- Request 1 - Premium -->
+            <div onclick="showToast('Ride accepted! Navigate to Financial District.')" class="bg-surface-container hover:bg-surface-container-highest rounded-lg p-5 transition-colors cursor-pointer flex justify-between items-center group relative overflow-hidden active:scale-[0.99]">
+              <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+              <div class="flex gap-4 items-center pl-2">
+                <div class="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container"><span class="material-symbols-outlined fill-icon text-2xl">local_taxi</span></div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-headline font-bold text-on-surface text-base md:text-lg">Gulberg III</span>
+                    <span class="bg-primary-fixed text-on-primary-fixed text-[10px] uppercase font-bold px-2 py-0.5 rounded">Premium</span>
+                  </div>
+                  <p class="font-body text-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span>0.8 km away • Est. 12 mins</p>
+                </div>
+              </div>
+              <div class="text-right flex items-center gap-6">
+                <div><p class="font-headline font-extrabold text-primary text-xl">Rs. 850</p><p class="font-body text-xs text-on-surface-variant">Est. Earnings</p></div>
+                <button class="bg-primary hover:bg-primary-container text-on-primary w-12 h-12 rounded-lg flex items-center justify-center transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] active:scale-95"><span class="material-symbols-outlined">check</span></button>
+              </div>
+            </div>
+            <!-- Request 2 - Economy -->
+            <div onclick="showToast('Ride accepted! Navigate to Saddar.')" class="bg-surface-container-low hover:bg-surface-container-high rounded-lg p-5 transition-colors cursor-pointer flex justify-between items-center active:scale-[0.99]">
+              <div class="flex gap-4 items-center">
+                <div class="w-12 h-12 bg-surface-variant rounded-lg flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-2xl">person</span></div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-headline font-bold text-on-surface text-base md:text-lg">Saddar, Karachi</span>
+                    <span class="bg-secondary-container text-on-secondary-container text-[10px] uppercase font-bold px-2 py-0.5 rounded">Economy</span>
+                  </div>
+                  <p class="font-body text-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span>2.1 km away • Est. 25 mins</p>
+                </div>
+              </div>
+              <div class="text-right flex items-center gap-6">
+                <div><p class="font-headline font-extrabold text-on-surface text-xl">Rs. 450</p><p class="font-body text-xs text-on-surface-variant">Est. Earnings</p></div>
+                <button class="border border-outline-variant hover:bg-surface-variant text-on-surface w-12 h-12 rounded-lg flex items-center justify-center transition-all active:scale-95"><span class="material-symbols-outlined">check</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+        <!-- Earnings -->
+        <div class="bg-primary text-on-primary rounded-xl p-6 ambient-shadow relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary-container rounded-full blur-2xl opacity-50"></div>
+          <h3 class="font-headline text-sm font-semibold text-inverse-primary mb-2 relative z-10">Today's Earnings</h3>
+          <p class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight mb-6 relative z-10">Rs. 4,850</p>
+          <div class="grid grid-cols-2 gap-4 relative z-10">
+            <div class="bg-tertiary-container/40 p-4 rounded-lg backdrop-blur-sm"><p class="font-body text-xs text-inverse-primary mb-1">Rides Done</p><p class="font-headline text-2xl font-bold">14</p></div>
+            <div class="bg-tertiary-container/40 p-4 rounded-lg backdrop-blur-sm"><p class="font-body text-xs text-inverse-primary mb-1">Time Online</p><p class="font-headline text-2xl font-bold">6.5h</p></div>
+          </div>
+        </div>
+
+        <!-- Zone Map -->
+        <div class="bg-surface-container-lowest rounded-xl p-4 ambient-shadow ghost-border flex-1 flex flex-col">
+          <div class="flex justify-between items-center mb-4 px-2">
+            <h3 class="font-headline text-lg text-on-surface font-bold">Current Zone</h3>
+            <span class="material-symbols-outlined text-on-surface-variant">my_location</span>
+          </div>
+          <div class="rounded-lg overflow-hidden flex-1 relative min-h-[180px]">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-emerald-900 to-slate-900">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="opacity-60">
+                <defs><pattern id="drivergrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="#10b981" stroke-width="0.5"/></pattern></defs>
+                <rect width="100%" height="100%" fill="url(#drivergrid)"/>
+                <line x1="0" y1="60" x2="100%" y2="80" stroke="#34d399" stroke-width="3"/>
+                <line x1="0" y1="140" x2="100%" y2="120" stroke="#059669" stroke-width="2"/>
+                <circle cx="40%" cy="50%" r="4" fill="#4ade80" opacity="0.9"/>
+                <circle cx="65%" cy="35%" r="4" fill="#4ade80" opacity="0.7"/>
+              </svg>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-lg flex items-center gap-2 border border-white">
+              <span class="material-symbols-outlined text-tertiary-fixed-dim text-lg">trending_up</span>
+              <span class="font-headline text-sm font-bold text-primary">High Demand</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-emerald-50/70 backdrop-blur-3xl text-emerald-900 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,77,44,0.08)] z-50">
+    <button onclick="navigate('home')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Home</span></button>
+    <button onclick="navigate('book')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined">directions_car</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Ride</span></button>
+    <button onclick="navigate('track')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined">near_me</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Track</span></button>
+    <button onclick="navigate('profile')" class="flex flex-col items-center text-zinc-500 px-5 py-2 hover:text-emerald-700 active:scale-90 transition-all"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Profile</span></button>
+    <button class="flex flex-col items-center bg-emerald-200/50 text-emerald-900 rounded-2xl px-5 py-2 active:scale-90"><span class="material-symbols-outlined fill-icon">local_taxi</span><span class="text-[10px] font-medium tracking-wide uppercase mt-1">Driver</span></button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SAFETY SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-safety" class="screen flex-col min-h-screen bg-background pb-24 md:pb-16 md:ml-64">
+  <!-- Mobile Header -->
+  <header class="mobile-only w-full sticky top-0 z-50 bg-surface-container-low flex justify-between items-center px-6 py-4">
+    <div class="text-2xl font-black tracking-tighter text-primary font-headline">GOtaxi</div>
+    <div class="flex items-center gap-4 text-primary">
+      <button class="hover:bg-surface-container p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">notifications</span></button>
+      <button onclick="navigate('profile')" class="hover:bg-surface-container p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+
+  <main class="flex-1 p-6 md:p-12 lg:p-16 pb-32 md:pb-16 flex flex-col gap-12 max-w-5xl mx-auto w-full">
+    <header class="flex flex-col gap-2">
+      <h1 class="font-headline text-4xl md:text-[3.5rem] leading-tight font-bold text-primary tracking-[-0.02em]">Safety Center</h1>
+      <p class="text-on-surface-variant font-body text-lg max-w-2xl">Your well-being is our priority. Access tools and resources to stay secure on every journey.</p>
+    </header>
+
+    <!-- Emergency Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+      <div class="md:col-span-7 bg-error text-on-error rounded-xl p-8 relative overflow-hidden shadow-[0_12px_40px_rgba(186,26,26,0.15)] flex flex-col justify-between min-h-[280px]">
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined fill-icon text-4xl">emergency</span><h2 class="font-headline text-2xl font-bold">Emergency Assistance</h2></div>
+          <p class="text-on-error/90 font-body mb-8 max-w-md">If you feel unsafe or are in an emergency situation, contact local authorities immediately.</p>
+        </div>
+        <button onclick="showToast('Calling emergency services!')" class="relative z-10 bg-on-error text-error font-bold font-body py-4 px-6 rounded-lg w-full flex items-center justify-center gap-2 hover:bg-error-container hover:text-on-error-container transition-colors active:scale-[0.98]">
+          <span class="material-symbols-outlined">call</span>Call 15 (Pakistan Emergency)
+        </button>
+      </div>
+      <div class="md:col-span-5 bg-surface-container-lowest rounded-xl p-8 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col justify-between border border-outline-variant/15">
+        <div>
+          <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-6"><span class="material-symbols-outlined fill-icon">share_location</span></div>
+          <h2 class="font-headline text-xl font-bold text-primary mb-2">Share Trip Status</h2>
+          <p class="text-on-surface-variant font-body text-sm mb-6">Let trusted friends or family follow your ride in real-time.</p>
+        </div>
+        <button onclick="showToast('Trip link shared!')" class="w-full bg-primary text-on-primary font-bold font-body py-3 px-6 rounded-lg hover:bg-primary-container transition-colors flex items-center justify-center gap-2 active:scale-[0.98]">Share Now</button>
+      </div>
+    </section>
+
+    <!-- Safety Toolkit -->
+    <section class="flex flex-col gap-6">
+      <h3 class="font-headline text-2xl font-bold text-primary pl-1">Safety Toolkit</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div onclick="showToast('Ride Check activated!')" class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] border border-outline-variant/15 hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-[0.98]">
+          <div class="flex items-center gap-4 mb-4"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined">verified_user</span></div><h4 class="font-headline font-bold text-on-surface">Ride Check</h4></div>
+          <p class="text-on-surface-variant font-body text-sm">Unexpected stop? We'll check in to make sure you're okay.</p>
+        </div>
+        <div onclick="showToast('Audio recording started!')" class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] border border-outline-variant/15 hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-[0.98]">
+          <div class="flex items-center gap-4 mb-4"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined">mic</span></div><h4 class="font-headline font-bold text-on-surface">Audio Recording</h4></div>
+          <p class="text-on-surface-variant font-body text-sm">Record audio securely during your trip if you feel uncomfortable.</p>
+        </div>
+        <div onclick="showToast('PIN: 8274. Show to driver.')" class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] border border-outline-variant/15 hover:bg-surface-container-low transition-colors cursor-pointer group active:scale-[0.98]">
+          <div class="flex items-center gap-4 mb-4"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined">pin</span></div><h4 class="font-headline font-bold text-on-surface">PIN Verification</h4></div>
+          <p class="text-on-surface-variant font-body text-sm">Ensure you're getting in the right car with a unique PIN.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trusted Contacts -->
+    <section class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] border border-outline-variant/15">
+      <div class="flex justify-between items-center mb-6">
+        <div><h3 class="font-headline text-xl font-bold text-primary">Trusted Contacts</h3><p class="text-on-surface-variant font-body text-sm">Automatically share your trips with these people.</p></div>
+        <button onclick="showToast('Add contact coming soon!')" class="text-primary hover:text-primary-container font-medium text-sm flex items-center gap-1 transition-colors active:scale-95"><span class="material-symbols-outlined text-lg">add</span>Add New</button>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-center justify-between py-4 group">
+          <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface font-headline font-bold">EM</div><div><div class="font-headline font-bold text-on-surface">Eleanor Vance</div><div class="text-on-surface-variant font-body text-xs">Sister</div></div></div>
+          <button onclick="showToast('Contact removed')" class="text-outline hover:text-error p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all active:scale-95"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+        <div class="flex items-center justify-between py-4 group">
+          <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface font-headline font-bold">TM</div><div><div class="font-headline font-bold text-on-surface">Thomas Miller</div><div class="text-on-surface-variant font-body text-xs">Partner</div></div></div>
+          <button onclick="showToast('Contact removed')" class="text-outline hover:text-error p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all active:scale-95"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-only bg-white/70 backdrop-blur-3xl fixed bottom-0 w-full rounded-t-3xl z-50 shadow-[0_-12px_40px_rgba(0,77,44,0.06)] flex justify-around items-center px-4 pb-8 pt-4 text-[10px] font-semibold uppercase tracking-wider">
+    <button onclick="navigate('activity')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">history</span>Activity</button>
+    <button onclick="navigate('wallet')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">account_balance_wallet</span>Wallet</button>
+    <button class="flex flex-col items-center bg-primary-fixed text-on-primary-fixed rounded-xl px-5 py-2 active:scale-90"><span class="material-symbols-outlined fill-icon mb-1">health_and_safety</span>Safety</button>
+    <button onclick="showToast('Rating coming soon!')" class="flex flex-col items-center text-on-surface-variant px-5 py-2 hover:opacity-80 active:scale-90"><span class="material-symbols-outlined mb-1">star_rate</span>Rating</button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     RATE YOUR RIDE SCREEN
+══════════════════════════════════════════════ -->
+<div id="screen-rate" class="screen flex-col min-h-screen bg-background md:ml-64">
+  <header class="w-full sticky top-0 z-50 bg-surface-container-low flex justify-between items-center px-6 py-4">
+    <button onclick="navigate('home')" class="text-primary hover:bg-surface-container p-2 rounded-full active:opacity-80"><span class="material-symbols-outlined">close</span></button>
+    <div class="text-2xl font-black tracking-tighter text-primary font-headline">GOtaxi</div>
+    <div></div>
+  </header>
+
+  <main class="flex-grow max-w-2xl mx-auto w-full px-6 py-8 flex flex-col gap-8">
+    <section class="flex flex-col items-center text-center space-y-2 mt-4">
+      <h1 class="text-4xl font-headline font-bold text-primary tracking-tight">How was your trip?</h1>
+      <p class="text-on-surface-variant font-body">Your feedback helps us improve.</p>
+    </section>
+
+    <!-- Driver Card -->
+    <section class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(0,77,44,0.06)] flex flex-col items-center relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-16 bg-surface-container-low z-0"></div>
+      <div class="z-10 flex flex-col items-center">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-800 flex items-center justify-center text-white font-black text-3xl border-4 border-surface-container-lowest shadow-sm mb-3">AK</div>
+        <h2 class="text-xl font-headline font-bold text-primary">Ahmed Khan</h2>
+        <div class="flex items-center gap-1 text-on-surface-variant text-sm mt-1">
+          <span class="material-symbols-outlined fill-icon text-primary-fixed-dim">star</span>
+          <span class="font-medium">4.9</span><span class="mx-1">•</span><span>Suzuki Alto (LED-4091)</span>
+        </div>
+      </div>
+      <div class="w-full mt-6 pt-6 border-t border-surface-container">
+        <div class="flex justify-between items-center text-sm font-body">
+          <div><span class="text-on-surface-variant mb-1 block">From</span><span class="font-medium text-on-surface">Clifton Block 5</span></div>
+          <div class="flex items-center px-4"><div class="h-px w-8 bg-surface-container-highest"></div><span class="material-symbols-outlined text-outline-variant mx-2 text-lg">arrow_forward</span><div class="h-px w-8 bg-surface-container-highest"></div></div>
+          <div class="text-right"><span class="text-on-surface-variant mb-1 block">To</span><span class="font-medium text-on-surface">Liberty Market</span></div>
+        </div>
+        <div class="mt-4 flex justify-between items-center text-sm">
+          <span class="text-on-surface-variant">Total Fare</span>
+          <span class="font-bold text-primary text-base">Rs. 450</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Star Rating -->
+    <section class="flex flex-col items-center space-y-4">
+      <h3 class="text-lg font-headline font-semibold text-primary">Rate Ahmed</h3>
+      <div class="flex gap-3" id="starRating">
+        <button onclick="setStars(1)" class="star-btn p-1"><span class="material-symbols-outlined text-5xl">star</span></button>
+        <button onclick="setStars(2)" class="star-btn p-1"><span class="material-symbols-outlined text-5xl">star</span></button>
+        <button onclick="setStars(3)" class="star-btn p-1"><span class="material-symbols-outlined text-5xl">star</span></button>
+        <button onclick="setStars(4)" class="star-btn p-1"><span class="material-symbols-outlined text-5xl">star</span></button>
+        <button onclick="setStars(5)" class="star-btn p-1"><span class="material-symbols-outlined text-5xl">star</span></button>
+      </div>
+    </section>
+
+    <!-- Compliment Chips -->
+    <section class="space-y-4">
+      <h3 class="text-sm font-body font-medium text-on-surface-variant uppercase tracking-wider text-center">What went well?</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button onclick="toggleChip(this)" class="chip px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-body text-sm hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2 active:scale-95"><span class="material-symbols-outlined text-sm">cleaning_services</span>Clean Car</button>
+        <button onclick="toggleChip(this)" class="chip px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-body text-sm hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2 active:scale-95"><span class="material-symbols-outlined text-sm">directions_car</span>Smooth Driving</button>
+        <button onclick="toggleChip(this)" class="chip px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-body text-sm hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2 active:scale-95"><span class="material-symbols-outlined text-sm">map</span>Good Route</button>
+        <button onclick="toggleChip(this)" class="chip px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-body text-sm hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2 active:scale-95"><span class="material-symbols-outlined text-sm">chat_bubble</span>Polite Driver</button>
+        <button onclick="toggleChip(this)" class="chip px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-body text-sm hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2 active:scale-95"><span class="material-symbols-outlined text-sm">music_note</span>Great Music</button>
+      </div>
+    </section>
+
+    <!-- Tip -->
+    <section class="bg-surface-container-low rounded-xl p-6 mt-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-base font-headline font-semibold text-primary">Add a tip</h3>
+        <span class="text-xs text-on-surface-variant font-body">100% goes to driver</span>
+      </div>
+      <div class="grid grid-cols-4 gap-3">
+        <button onclick="selectTip(this,'0')" class="tip-btn py-3 rounded-lg bg-surface-container-lowest text-primary font-body font-medium border border-transparent hover:border-primary-fixed-dim transition-all text-sm active:scale-95">No Tip</button>
+        <button onclick="selectTip(this,'50')" class="tip-btn py-3 rounded-lg bg-surface-container-lowest text-primary font-body font-medium border border-transparent hover:border-primary-fixed-dim transition-all text-sm active:scale-95">Rs. 50</button>
+        <button onclick="selectTip(this,'100')" class="tip-btn active py-3 rounded-lg text-on-primary font-body font-medium text-sm relative overflow-hidden active:scale-95">
+          <div class="absolute top-0 left-0 w-full h-1 bg-white opacity-20"></div>Rs. 100
+        </button>
+        <button onclick="selectTip(this,'200')" class="tip-btn py-3 rounded-lg bg-surface-container-lowest text-primary font-body font-medium border border-transparent hover:border-primary-fixed-dim transition-all text-sm active:scale-95">Rs. 200</button>
+      </div>
+      <div class="mt-4"><input class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface font-body text-sm focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant" placeholder="Custom Amount (PKR)" type="number"/></div>
+    </section>
+
+    <!-- Comments -->
+    <section>
+      <textarea class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface font-body text-sm focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant resize-none" placeholder="Leave a comment (optional)..." rows="3"></textarea>
+    </section>
+
+    <!-- Submit -->
+    <div class="pb-8 pt-4">
+      <button onclick="submitRating()" class="w-full bg-primary text-on-primary font-headline font-bold text-lg py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary to-primary-container opacity-50"></div>
+        <div class="absolute top-0 left-0 w-full h-1 bg-white opacity-10"></div>
+        <span class="relative z-10">Submit Feedback</span>
+      </button>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── Navigation ──────────────────────────────────────
+const screens = ['home','book','track','activity','wallet','profile','driver','safety','rate'];
+const sideIds = ['home','book','track','profile','driver'];
+
+function navigate(id) {
+  screens.forEach(s => {
+    const el = document.getElementById('screen-'+s);
+    if (el) { el.classList.remove('active'); el.style.display='none'; }
+  });
+  const target = document.getElementById('screen-'+id);
+  if (target) { target.classList.add('active'); target.style.display='flex'; }
+
+  // Update side nav
+  sideIds.forEach(s => {
+    const el = document.getElementById('side-'+s);
+    if (el) el.classList.remove('active');
+  });
+  if (document.getElementById('side-'+id)) document.getElementById('side-'+id).classList.add('active');
+
+  window.scrollTo(0,0);
+  currentScreen = id;
+}
+
+// ── Ride Type Selection ──────────────────────────────
+function selectType(btn, type) {
+  document.querySelectorAll('.rtype').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Bid Accept ──────────────────────────────────────
+function acceptBid(name, fare) {
+  showToast(name + ' accepted your offer of ' + fare);
+  setTimeout(() => navigate('track'), 1200);
+}
+
+// ── Broadcast Offer ─────────────────────────────────
+function broadcastOffer() {
+  const dest = document.getElementById('dropoffInput').value;
+  if (!dest.trim()) { showToast('Please enter your destination!'); document.getElementById('dropoffInput').focus(); return; }
+  const fare = document.getElementById('fareInput').value || '450';
+  showToast('Offer of Rs. ' + fare + ' broadcast! Finding drivers...');
+  setTimeout(() => navigate('track'), 1500);
+}
+
+// ── Star Rating ──────────────────────────────────────
+let currentRating = 0;
+function setStars(n) {
+  currentRating = n;
+  const btns = document.querySelectorAll('.star-btn');
+  btns.forEach((b, i) => {
+    const icon = b.querySelector('.material-symbols-outlined');
+    if (i < n) { icon.style.color='#aef2c4'; icon.style.fontVariationSettings="'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"; }
+    else { icon.style.color='#bfc9bf'; icon.style.fontVariationSettings="'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24"; }
+  });
+}
+
+// ── Chip Toggle ──────────────────────────────────────
+function toggleChip(el) { el.classList.toggle('active'); }
+
+// ── Tip Selection ────────────────────────────────────
+function selectTip(btn, amount) {
+  document.querySelectorAll('.tip-btn').forEach(b => { b.classList.remove('active'); b.style.background=''; });
+  btn.classList.add('active');
+}
+
+// ── Submit Rating ────────────────────────────────────
+function submitRating() {
+  showToast('Thank you! ' + (currentRating || 5) + '★ rating submitted.');
+  setTimeout(() => navigate('home'), 1500);
+}
+
+// ── Activity Filters ─────────────────────────────────
+function filterRides(btn, type) {
+  document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('bg-primary','text-on-primary'); b.classList.add('bg-surface-container-highest','text-on-surface'); });
+  btn.classList.add('bg-primary','text-on-primary'); btn.classList.remove('bg-surface-container-highest','text-on-surface');
+  const cards = document.querySelectorAll('[data-type]');
+  cards.forEach(c => { c.style.display = (type === 'all' || c.dataset.type === type) ? '' : 'none'; });
+}
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Init ─────────────────────────────────────────────
+let currentScreen = 'home';
+navigate('home');
+</script>
+</body>
+</html>

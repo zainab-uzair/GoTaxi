@@ -1,0 +1,70 @@
+/* ── Global reset & typography ─────────────────────── */
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background-color: #f8faf8; color: #191c1b; }
+h1,h2,h3,h4,h5,h6,.font-headline { font-family: 'Manrope', sans-serif; }
+
+/* ── Material Symbols ──────────────────────────────── */
+.material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; font-family:'Material Symbols Outlined'; font-style:normal; font-size:24px; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr; -webkit-font-smoothing:antialiased; }
+.fill-icon { font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+
+/* ── Visual effects ────────────────────────────────── */
+.glass-panel { background-color:rgba(255,255,255,0.7); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); }
+.ambient-shadow { box-shadow:0 12px 40px rgba(0,77,44,0.06); }
+.ghost-border { outline:1px solid rgba(191,201,191,0.15); }
+.btn-gradient { background:linear-gradient(135deg,#00341c 0%,#004d2c 100%); }
+
+/* ── Screen system ─────────────────────────────────── */
+.screen { display:none; }
+.screen.active { display:flex; }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.screen.active { animation:fadeSlide 0.2s ease; }
+
+/* ── Toast ─────────────────────────────────────────── */
+#toast { position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#191c1b;color:#fff;padding:10px 20px;border-radius:0.75rem;font-size:0.8rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;font-family:'Inter',sans-serif; }
+#toast.show { opacity:1; }
+
+/* ── Bottom nav active state ───────────────────────── */
+.nav-item.active { background:rgba(174,242,196,0.5); color:#002110; border-radius:1rem; }
+.nav-item.active .material-symbols-outlined { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+
+/* ── Side nav active state ─────────────────────────── */
+.side-item.active { background:#eceeec; color:#00341c; }
+
+/* ── Star rating ───────────────────────────────────── */
+.star-btn { color:#bfc9bf; transition:color 0.15s; cursor:pointer; }
+.star-btn.lit,.star-btn:hover,.star-btn:hover ~ .star-btn { color:#00341c; }
+.stars-row { display:flex; flex-direction:row-reverse; justify-content:center; gap:4px; }
+.stars-row .star-btn:hover,.stars-row .star-btn:hover ~ .star-btn { color:#00341c; }
+
+/* ── Chip & tip button active states ───────────────── */
+.chip.active { background:#004d2c; color:#7bbd93; border-color:#004d2c; }
+.tip-btn.active { background:#00341c; color:#ffffff; }
+
+/* ── Ride type button active state ─────────────────── */
+.rtype.active { background:#dee5d8; color:#00341c; outline:1px solid #bfc9bf; }
+
+/* ── Scrollbar hide ────────────────────────────────── */
+.no-scroll::-webkit-scrollbar{display:none} .no-scroll{-ms-overflow-style:none;scrollbar-width:none}
+
+/* ── Mobile safe area (notch support) ──────────────── */
+@supports(padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-nav { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+}
+
+/* ── Mobile overrides ──────────────────────────────── */
+@media(max-width:767px) {
+  .truncate-mobile { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
+  #screen-book { position:relative; }
+  .driver-req-actions { flex-direction:column; gap:8px; }
+  #fareInput { font-size:2rem !important; }
+}
+
+/* ── Layout shells ─────────────────────────────────── */
+.app-shell { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+.main-with-sidenav { display:flex; flex:1; overflow:hidden; }
+.side-nav { width:256px; flex-shrink:0; display:flex; flex-direction:column; background:#f2f4f2; height:100vh; padding:2rem 1.5rem; position:fixed; top:0; left:0; z-index:40; }
+.content-area { flex:1; overflow-y:auto; margin-left:0; }
+
+/* ── Responsive breakpoints ────────────────────────── */
+@media(min-width:768px) { .content-area { margin-left:256px; } .md-sidenav-show { display:flex !important; } .mobile-only { display:none !important; } }
+@media(max-width:767px) { .side-nav { display:none; } .desktop-only { display:none !important; } }
